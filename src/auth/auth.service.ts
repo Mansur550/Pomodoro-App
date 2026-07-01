@@ -9,6 +9,8 @@ export class AuthService {
         //encrypt the user password here
         //using bcrypt
         const hashedPassword = await bcrypt.hash(createUserDto.password,10);
+
+        //save user to database
         return createUserDto;
     }
 }
