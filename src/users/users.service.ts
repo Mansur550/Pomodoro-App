@@ -16,9 +16,10 @@ export class UsersService {
     }
 
     // Find user by email
-    async findByEmail(email: string): Promise<any> {
+    async findByEmail(email: string): Promise<User | null> {
     
         //Logic to find user by email
+        return this.userRepository.findOne({ where: { email }});
     }
     
 }

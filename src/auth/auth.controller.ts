@@ -19,7 +19,7 @@ export class AuthController {
     async login(
         @Body() loginDto: LoginDto
     ): Promise<{token: string}>{
-        const token= await this.authService.register(loginDto);
+        const token= await this.authService.login(loginDto);
         return { token };
     }
 }

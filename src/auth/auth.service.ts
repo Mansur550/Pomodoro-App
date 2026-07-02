@@ -11,28 +11,28 @@ export class AuthService {
     constructor(private readonly usersService: UsersService,
         private readonly jwtService: JwtService
 
-    ) {}
+    ) { }
 
-    async register(createUserDto: CreateUserDto)  {
+    async register(createUserDto: CreateUserDto) {
 
         //encrypt the user password here
         //using bcrypt
-        const hashedPassword = await bcrypt.hash(createUserDto.password,10);
+        const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
         createUserDto.password = hashedPassword;
 
         const user = await this.usersService.createUser(createUserDto);
-        return this.jwtService.sign({id: user.id, email: user.email});  // Return the JWT token after successful registration
+        return this.jwtService.sign({ id: user.id, email: user.email });  // Return the JWT token after successful registration
     }
 
     //Login method
 
-    login(loginDto: LoginDto){
-        const user = this.usersService.findByEmail(loginDto.email);
-        if (!user){
+     async login(loginDto: LoginDto) {
+        const user =await this.usersService.findByEmail(loginDto.email);
+        if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }
-        return this.jwtService.sign({id: user.id, email: user.email});  // Return the JWT token after successful login
+        return this.jwtService.sign({ id: user.id, email: user.email });  // Return the JWT token after successful login
 
     }
-        
+
 }
