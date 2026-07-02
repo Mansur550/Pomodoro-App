@@ -28,9 +28,13 @@ export class AuthService {
 
      async login(loginDto: LoginDto) {
         const user =await this.usersService.findByEmail(loginDto.email);
-        if (!user) {
+
+        if (!user || !(await bcrypt.compare(loginDto.password, user.password))) {
             throw new UnauthorizedException('Invalid credentials');
         }
+        // if (!user) {
+        //     throw new UnauthorizedException('Invalid credentials');
+        // }
         return this.jwtService.sign({ id: user.id, email: user.email });  // Return the JWT token after successful login
 
     }
