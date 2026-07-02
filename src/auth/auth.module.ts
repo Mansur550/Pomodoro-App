@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from 'src/users/users.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -11,14 +11,21 @@ import { JwtModule } from '@nestjs/jwt';
       isGlobal: true, // Make ConfigModule global
       envFilePath: '.env', // Specify the path to your .env file
     }),
+
     UsersModule,
-    
     JwtModule.registerAsync({
-        imports: [ConfigModule]
+        imports: [ConfigModule],
+        useFactory: async (config: ConfigService) => ({
+        secret:config.get<string>('JWT_SECRET'),
+        signOptions: { 
+          expiresIn: '1d' 
+        },//  token expiration time
+        }),
+        inject: [ConfigService],
     })
   ],
 
   controllers: [AuthController],
-  providers: [AuthService]
+  providers: [AuthService, Jwt]
 })
 export class AuthModule {}
