@@ -14,5 +14,11 @@ export class UsersService {
         const newUser = this.userRepository.create(data);
         return await this.userRepository.save(newUser)
     }
+
+    // Find user by email
+    async findByEmail(email: string): Promise<any> {
+    
+        //Logic to find user by email
+    }
     
 }

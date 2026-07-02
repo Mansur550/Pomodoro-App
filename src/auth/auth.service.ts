@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,17 @@ export class AuthService {
 
         const user = await this.usersService.createUser(createUserDto);
         return this.jwtService.sign({id: user.id, email: user.email});  // Return the JWT token after successful registration
+    }
+
+    //Login method
+
+    login(loginDto: LoginDto){
+        const user = this.usersService.findByEmail(loginDto.email);
+        if (!user){
+            throw new UnauthorizedException('Invalid credentials');
+        }
+        return this.jwtService.sign({id: user.id, email: user.email});  // Return the JWT token after successful login
+
     }
         
 }
